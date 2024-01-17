@@ -1,0 +1,39 @@
+service: scraper
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  stage: api
+
+functions:
+  rateHandler:
+    handler: index.run
+    events:
+      # Invoke Lambda function every 5 minutes
+      # - schedule: rate(5 minutes)
+      - schedule: rate(1 minute)
+
+  # cronHandler:
+  #   handler: index.run
+  #   events:
+  #     # Invoke Lambda function every 2nd minute from Mon-Fri
+  #     - schedule: cron(0/2 * ? * MON-FRI *)
+
+  normHandler:
+    handler: index.run
+    events:
+      - http:
+          method: GET
+          path: /normal
+
+custom:
+  serverless-offline:
+    # httpPort: ${file(../offlineConfig.yml):services.serviceName.httpPort}
+    httpPort: 5001
+    lambdaPort: 15001
+
+
+plugins:
+  - serverless-esbuild
+  - serverless-offline

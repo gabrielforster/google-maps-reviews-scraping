@@ -1,0 +1,7 @@
+services:
+  processor:
+    httpPort: 5002
+    lambdaPort: 15002
+  scraper:
+    httpPort: 5001
+    lambdaPort: 15001

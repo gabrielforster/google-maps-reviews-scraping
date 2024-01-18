@@ -1,5 +1,5 @@
-import https from 'node:https';
 import { ScheduledEvent, Context } from 'aws-lambda';
+import { Lambda } from 'aws-sdk';
 import puppeteer, { HTTPRequest } from 'puppeteer';
 
 const url = "https://www.google.com/maps/place/Catholic+University+of+Santa+Catarina/@-26.4669318,-49.1178055,17z/data=!4m8!3m7!1s0x94de940dbec22f4d:0xf2864ccc867a7dc1!8m2!3d-26.4669366!4d-49.1152252!9m1!1b1!16s%2Fg%2F122bxtf4?entry=ttu";
@@ -127,6 +127,20 @@ export async function run (event: ScheduledEvent, context: Context) {
     resolveMain();
   })
 
-  console.log(reviewsData);
+  const lambda = new Lambda({
+    ...(
+      process.env.IS_OFFLINE
+        ? { region: 'localhost', endpoint: `http://localhost:${process.env.processorPort}` }
+        : {}
+    )
+  })
+
+  await lambda.invoke({ 
+    FunctionName: 'processor-api-process',
+    InvocationType: 'Event',
+    Payload: JSON.stringify({ 
+      data: reviewsData
+    }),
+  }).promise();
 };
 

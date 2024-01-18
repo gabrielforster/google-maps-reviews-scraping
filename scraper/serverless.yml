@@ -6,19 +6,18 @@ provider:
   runtime: nodejs20.x
   stage: api
   timeout: 120
+  environment:
+    processorPort: ${file(../offlineConfig.yml):services.processor.lambdaPort}
 
 functions:
   scheduled:
     handler: ports/webScraper.run
     events:
       # Invoke Lambda function every 5 minutes
-      - schedule: rate(5 minutes)
+      - schedule: rate(1 minute)
 
 custom:
-  serverless-offline:
-    # httpPort: ${file(../offlineConfig.yml):services.serviceName.httpPort}
-    httpPort: 5001
-    lambdaPort: 15001
+  serverless-offline: ${file(../offlineConfig.yml):services.scraper}
 
 
 plugins:

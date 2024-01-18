@@ -1,0 +1,20 @@
+service: processor
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  stage: api
+  timeout: 30
+
+functions:
+  process:
+    handler: ports/process.handler
+
+custom:
+  serverless-offline: ${file(../offlineConfig.yml):services.processor}
+
+plugins:
+  - serverless-esbuild
+  - serverless-offline
+

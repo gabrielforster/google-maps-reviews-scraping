@@ -1,11 +1,9 @@
-import { Context } from "aws-lambda";
-
-type ReviewData = {}
+import { Review } from "../../shared/types"
 
 type Event = {
   data: {
     placeId: string;
-    reviews: Array<ReviewData>;
+    reviews: Array<Review>;
   }
 }
 

@@ -11,6 +11,20 @@ functions:
   addPlaceReviews:
     handler: ports/addPlaceReviews.handler
 
+  # getPlaces:
+  #   handler: ports/getPlaces.handler
+  #   events:
+  #     - http:
+  #         method: GET 
+  #         path: /places/
+
+  createPlace:
+    handler: ports/createPlace.handler
+    events:
+      - http:
+          method: POST 
+          path: /places/
+
 custom:
   serverless-offline: ${file(../offlineConfig.yml):services.places}
 

@@ -11,10 +11,12 @@ datasource db {
 }
 
 model Place {
-  id          String  @id @default(cuid())
+  id          String   @id @default(uuid())
   name        String
+  slug        String   @unique
   description String?
   url         String
+  createdAt   DateTime @default(now()) @map("created_at")
 
   reviews Review[]
 
@@ -22,7 +24,7 @@ model Place {
 }
 
 model Review {
-  id           String   @id @default(cuid())
+  id           String   @id @default(uuid())
   rating       Int
   comment      String?
   link         String

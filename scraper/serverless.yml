@@ -7,7 +7,7 @@ provider:
   stage: api
   timeout: 120
   environment:
-    processorPort: ${file(../offlineConfig.yml):services.processor.lambdaPort}
+    scraperPort: ${file(../offlineConfig.yml):services.scraper.lambdaPort}
 
 functions:
   scheduled:
@@ -15,6 +15,11 @@ functions:
     events:
       # Invoke Lambda function every 5 minutes
       - schedule: rate(1 minute)
+
+  fetcher:
+    handler: ports/process.handler
+
+
 
 custom:
   serverless-offline: ${file(../offlineConfig.yml):services.scraper}

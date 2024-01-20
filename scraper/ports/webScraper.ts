@@ -130,13 +130,13 @@ export async function run (event: ScheduledEvent, context: Context) {
   const lambda = new Lambda({
     ...(
       process.env.IS_OFFLINE
-        ? { region: 'localhost', endpoint: `http://localhost:${process.env.processorPort}` }
+        ? { region: 'localhost', endpoint: `http://localhost:${process.env.scraperPort}` }
         : {}
     )
   })
 
   await lambda.invoke({ 
-    FunctionName: 'processor-api-process',
+    FunctionName: 'scraper-api-fetcher',
     InvocationType: 'Event',
     Payload: JSON.stringify({ 
       data: reviewsData

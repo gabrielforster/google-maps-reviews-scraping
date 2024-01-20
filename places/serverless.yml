@@ -1,4 +1,4 @@
-service: processor
+service: places
 frameworkVersion: '3'
 
 provider:
@@ -8,11 +8,11 @@ provider:
   timeout: 30
 
 functions:
-  process:
-    handler: ports/process.handler
+  addPlaceReviews:
+    handler: ports/addPlaceReviews.handler
 
 custom:
-  serverless-offline: ${file(../offlineConfig.yml):services.processor}
+  serverless-offline: ${file(../offlineConfig.yml):services.places}
 
 plugins:
   - serverless-esbuild

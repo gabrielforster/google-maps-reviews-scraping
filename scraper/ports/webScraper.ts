@@ -136,7 +136,7 @@ export async function run (event: ScheduledEvent, context: Context) {
   })
 
   await lambda.invoke({ 
-    FunctionName: 'scraper-api-fetcher',
+    FunctionName: 'scraper-api-mapper',
     InvocationType: 'Event',
     Payload: JSON.stringify({ 
       data: reviewsData

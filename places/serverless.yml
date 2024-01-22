@@ -32,6 +32,9 @@ functions:
           method: POST
           path: /places/
 
+  reviewPatch:
+    handler: ports/reviewPatch.handler
+
 custom:
   serverless-offline: ${file(../offlineConfig.yml):services.places}
 

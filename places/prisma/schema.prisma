@@ -30,9 +30,12 @@ model Review {
   link         String
   date         DateTime
   reviewerName String   @map("reviewer_name")
+  commentHash  String   @map("comment_hash")
 
   placeId String
   place   Place  @relation(fields: [placeId], references: [id])
 
+  @@unique([placeId, rating, commentHash])
+  @@index([placeId, reviewerName], name: "reviewer_name")
   @@map("reviews")
 }

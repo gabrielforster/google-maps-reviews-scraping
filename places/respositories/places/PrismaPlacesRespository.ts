@@ -6,10 +6,27 @@ import { GetPlaceInput, PlacesRepository } from "./interface";
 export class PrismaPlacesRespository implements PlacesRepository {
   constructor(private readonly prisma: PrismaClient) { }
 
-  get({ id, slug }: GetPlaceInput): Promise<PlaceWithId | null> {
-    throw new Error("Method not implemented.");
+  async get({ id, slug }: GetPlaceInput): Promise<PlaceWithId | null> {
+    const place = await this.prisma.place.findUnique({
+      where: {
+        id: id,
+        slug: slug
+      }
+    })
+
+    if (place === null)
+      return null;
+
+    return {
+      id: place.id,
+      name: place.name,
+      slug: place.slug,
+      description: place.description,
+      url: place.url,
+      createdAt: place.createdAt
+    }
   }
-  
+
   async list () {
     const places = await this.prisma.place.findMany();
 
@@ -45,7 +62,7 @@ export class PrismaPlacesRespository implements PlacesRepository {
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
-          throw new Error("Unique constraint validation failed")   
+          throw new Error("Unique constraint validation failed")
         }
       }
 

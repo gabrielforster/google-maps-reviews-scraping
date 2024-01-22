@@ -2,11 +2,11 @@ import { Place, PlaceWithId } from "../../types/place";
 
 export type GetPlaceInput = {
   id: string;
-  slug: never
+  slug?: never
 } | {
-  id: never;
+  id?: never;
   slug: string;
-}
+};
 
 export interface PlacesRepository {
   get(input: GetPlaceInput): Promise<PlaceWithId | null>;

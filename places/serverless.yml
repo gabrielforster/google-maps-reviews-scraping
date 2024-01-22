@@ -15,21 +15,21 @@ functions:
     handler: ports/listPlaces.handler
     events:
       - http:
-          method: GET 
+          method: GET
           path: /places/
 
-  # getPlace:
-  #   handler: ports/getPlace.handler
-  #   events:
-  #     - http:
-  #         method: GET 
-  #         path: /places/{slug}
+  getPlace:
+    handler: ports/getPlace.handler
+    events:
+      - http:
+          method: GET
+          path: /places/{slug}
 
   createPlace:
     handler: ports/createPlace.handler
     events:
       - http:
-          method: POST 
+          method: POST
           path: /places/
 
 custom:

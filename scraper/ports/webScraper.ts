@@ -26,7 +26,6 @@ export async function run (event: ScheduledEvent, context: Context) {
   });
 
   await page.goto(url);
-  const pageTitle = await page.title();
 
   await page.evaluate(() => {
     const buttonsWrapper = document.querySelector("div[role='tablist']")
@@ -139,7 +138,8 @@ export async function run (event: ScheduledEvent, context: Context) {
     FunctionName: 'scraper-api-mapper',
     InvocationType: 'Event',
     Payload: JSON.stringify({ 
-      data: reviewsData
+      data: reviewsData,
+      placeId: "62393fcd-5407-4fd5-816a-8be6619c63c1"
     }),
   }).promise();
 };

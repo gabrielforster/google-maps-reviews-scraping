@@ -1,3 +1,5 @@
+import { Lambda } from "aws-sdk";
+import { Review } from "../../shared/types";
 import { fetch } from "../lib/fetch";
 import { parseGoogleResponse } from "../lib/parser";
 
@@ -14,7 +16,7 @@ type Event = {
 type Data = Array<any>;
 
 export async function handler (event: Event) {
-  const { data } = event;
+  const { data, placeId } = event;
 
   const promises = data.map(({ url, headers }) => fetch(url, headers));
 
@@ -30,8 +32,20 @@ export async function handler (event: Event) {
     return acc;
   } , [[], []] as [Data, Array<Error>]);
 
-  const reviews = parseGoogleResponse(fulfilled);
+  const reviews = parseGoogleResponse(fulfilled, placeId);
 
-  console.log(JSON.stringify(reviews, null, 2));
+  const lambda = new Lambda({
+    ...(
+      process.env.IS_OFFLINE
+        ? { region: 'localhost', endpoint: `http://localhost:${process.env.placesPort}` }
+        : {}
+    )
+  })
+
+  await lambda.invoke({ 
+    FunctionName: 'places-api-reviewPatch',
+    InvocationType: 'Event',
+    Payload: JSON.stringify(reviews),
+  }).promise();
 }
 

@@ -8,6 +8,7 @@ provider:
   timeout: 120
   environment:
     scraperPort: ${file(../offlineConfig.yml):services.scraper.lambdaPort}
+    placesPort: ${file(../offlineConfig.yml):services.places.lambdaPort}
 
 functions:
   scheduled:

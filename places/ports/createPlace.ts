@@ -20,7 +20,7 @@ export async function handler (event: APIGatewayProxyEvent): Promise<ProxyResult
 
     const place = await new CreatePlace({
       data: params,
-      placesRepository 
+      placesRepository
     }).execute();
 
     await prisma.$disconnect();
@@ -32,9 +32,9 @@ export async function handler (event: APIGatewayProxyEvent): Promise<ProxyResult
       }
     })
   } catch (error) {
-    if (error instanceof Error) 
+    if (error instanceof Error)
       return lambdaError(500, error.message);
-    
+
     return lambdaError(500, 'Internal Server Error');
   }
 }

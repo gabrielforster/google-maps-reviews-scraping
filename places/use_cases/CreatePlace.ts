@@ -22,7 +22,7 @@ export class CreatePlace {
   private originalSlug: string | null = null;
   private saveErrorCount = 0;
 
-  constructor({ 
+  constructor({
     data: {
       name,
       description,

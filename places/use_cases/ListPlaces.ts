@@ -2,8 +2,7 @@ import { PlacesRepository } from "../respositories/places/interface";
 import { PlaceWithId } from "../types";
 
 export class ListPlaces {
-  constructor(private readonly placesRepository: PlacesRepository) { 
-  }
+  constructor(private readonly placesRepository: PlacesRepository) { }
 
   async execute() {
     return this.list();

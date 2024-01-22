@@ -2,7 +2,6 @@ import { APIGatewayProxyEvent, ProxyResult } from "aws-lambda";
 import { lambdaResponse, lambdaError, checkParams } from "../././../shared/utils";
 import { PrismaPlacesRespository } from "../respositories/places/PrismaPlacesRespository";
 import { PrismaClient } from "@prisma/client";
-import { CreatePlace } from "../use_cases/CreatePlace";
 import { ListPlaces } from "../use_cases/ListPlaces";
 
 export async function handler (event: APIGatewayProxyEvent): Promise<ProxyResult> {
@@ -18,19 +17,9 @@ export async function handler (event: APIGatewayProxyEvent): Promise<ProxyResult
       body: places,
     })
   } catch (error) {
-    if (error instanceof Error) 
+    if (error instanceof Error)
       return lambdaError(500, error.message);
-    
+
     return lambdaError(500, 'Internal Server Error');
-  }
-}
-
-function lambdaGetParams(event: APIGatewayProxyEvent) {
-  const body = JSON.parse(event.body || '{}');
-
-  return {
-    name: body.name,
-    description: body.description,
-    url: body.url,
   }
 }

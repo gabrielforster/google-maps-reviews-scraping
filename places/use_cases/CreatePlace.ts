@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { PlacesRepository } from "../respositories/places/interface";
+import { PlaceWithId } from "../types";
 
 type Input = {
     data: {
@@ -45,7 +46,7 @@ export class CreatePlace {
     return place;
   }
 
-  private async save () {
+  private async save (): Promise<PlaceWithId> {
     try {
       const place = await this.placesRepository.add({
         name: this.name,
@@ -56,8 +57,8 @@ export class CreatePlace {
 
       return place;
     } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2002') {
+      if (error instanceof Error) {
+        if (error.message !== "Unique constraint validation failed") {
           console.info('There is a unique constraint violation, a new user cannot be created with this email')
 
           if (this.originalSlug === null) {
@@ -94,6 +95,10 @@ export class CreatePlace {
     }
 
     if (!url.pathname) {
+      throw new Error("invalid url");
+    }
+
+    if (!url.toString().includes("google.com/maps/place")) {
       throw new Error("invalid url");
     }
  }

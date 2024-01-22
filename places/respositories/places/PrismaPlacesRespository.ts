@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 import { Place, PlaceWithId } from "../../types/place";
 import { GetPlaceInput, PlacesRepository } from "./interface";
@@ -24,22 +24,32 @@ export class PrismaPlacesRespository implements PlacesRepository {
   }
 
   async add(place: Place): Promise<PlaceWithId> {
-    const saved = await this.prisma.place.create({
-      data: {
-        name: place.name,
-        slug: place.slug,
-        description: place.description,
-        url: place.url
-      }
-    })
+    try {
+      const saved = await this.prisma.place.create({
+        data: {
+          name: place.name,
+          slug: place.slug,
+          description: place.description,
+          url: place.url
+        }
+      })
 
-    return {
-      id: saved.id,
-      name: saved.name,
-      slug: saved.slug,
-      description: saved.description,
-      url: saved.url,
-      createdAt: saved.createdAt
+      return {
+        id: saved.id,
+        name: saved.name,
+        slug: saved.slug,
+        description: saved.description,
+        url: saved.url,
+        createdAt: saved.createdAt
+      }
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2002') {
+          throw new Error("Unique constraint validation failed")   
+        }
+      }
+
+      throw error;
     }
   }
 }

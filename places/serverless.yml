@@ -11,12 +11,19 @@ functions:
   addPlaceReviews:
     handler: ports/addPlaceReviews.handler
 
-  # getPlaces:
-  #   handler: ports/getPlaces.handler
+  listPlaces:
+    handler: ports/listPlaces.handler
+    events:
+      - http:
+          method: GET 
+          path: /places/
+
+  # getPlace:
+  #   handler: ports/getPlace.handler
   #   events:
   #     - http:
   #         method: GET 
-  #         path: /places/
+  #         path: /places/{slug}
 
   createPlace:
     handler: ports/createPlace.handler

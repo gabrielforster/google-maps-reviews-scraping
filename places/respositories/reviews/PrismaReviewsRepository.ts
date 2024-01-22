@@ -30,8 +30,9 @@ export class PrismaReviewsRespository implements ReviewsRepository {
     try {
       const saved = await this.prisma.review.upsert({
         where: {
-          placeId_rating_commentHash: {
+          placeId_reviewerName_rating_commentHash: {
             placeId: review.placeId,
+            reviewerName: review.reviewer,
             rating: review.rating,
             commentHash: review.commentHash
           }

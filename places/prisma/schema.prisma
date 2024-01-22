@@ -35,7 +35,7 @@ model Review {
   placeId String
   place   Place  @relation(fields: [placeId], references: [id])
 
-  @@unique([placeId, rating, commentHash])
+  @@unique([placeId, reviewerName, rating, commentHash])
   @@index([placeId, reviewerName], name: "reviewer_name")
   @@map("reviews")
 }

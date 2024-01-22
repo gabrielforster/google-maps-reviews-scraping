@@ -12,10 +12,15 @@ provider:
 
 functions:
   scheduled:
-    handler: ports/webScraper.run
+    handler: ports/schedule.run
     events:
-      # Invoke Lambda function every 5 minutes
-      - schedule: rate(1 minute)
+      # - schedule: rate(5 minutes)
+      - http:
+          method: GET
+          path: /
+
+  processor:
+    handler: ports/processor.handler
 
   mapper:
     handler: ports/mapper.handler

@@ -1,12 +1,16 @@
-import { ScheduledEvent, Context } from 'aws-lambda';
 import { Lambda } from 'aws-sdk';
 import puppeteer, { HTTPRequest } from 'puppeteer';
 
-const url = "https://www.google.com/maps/place/Catholic+University+of+Santa+Catarina/@-26.4669318,-49.1178055,17z/data=!4m8!3m7!1s0x94de940dbec22f4d:0xf2864ccc867a7dc1!8m2!3d-26.4669366!4d-49.1152252!9m1!1b1!16s%2Fg%2F122bxtf4?entry=ttu";
+const REVIEWS_URL = "https://www.google.com/maps/rpc/listugcposts";
 
-const reviewsDataUrl = "https://www.google.com/maps/rpc/listugcposts";
+type Input = {
+  url: string
+  placeId: string
+}
 
-export async function run (event: ScheduledEvent, context: Context) {
+export async function handler (input: Input) {
+  const { url, placeId } = input;
+
   const browser = await puppeteer.launch({
     headless: "new",
     args: ['--lang=en-US,en'],
@@ -27,6 +31,8 @@ export async function run (event: ScheduledEvent, context: Context) {
 
   await page.goto(url);
 
+  await page.waitForSelector("div[role='tablist']");
+
   await page.evaluate(() => {
     const buttonsWrapper = document.querySelector("div[role='tablist']")
     if (!buttonsWrapper) {
@@ -44,6 +50,8 @@ export async function run (event: ScheduledEvent, context: Context) {
 
     button.click();
   })
+
+  await page.waitForSelector("div[role='tablist']");
 
   const reviewsCount = await page.evaluate(() => {
     const wrapper = Array.from(document.getElementsByClassName("fontBodySmall"))
@@ -67,7 +75,7 @@ export async function run (event: ScheduledEvent, context: Context) {
 
 
     page.on('request', (request: HTTPRequest) => {
-      if (request.url().startsWith(reviewsDataUrl)) {
+      if (request.url().startsWith(REVIEWS_URL)) {
         reviewsData.push({
           url: request.url(),
           headers: request.headers(),
@@ -76,6 +84,9 @@ export async function run (event: ScheduledEvent, context: Context) {
 
       request.continue();
     })
+
+    // await page.waitForSelector("button[aria-label='Sort reviews'");
+    await page.waitForSelector("button[aria-label='Classificar avaliações'");
 
     await page.evaluate(async () => {
       // const sortButton = document.querySelector("button[aria-label='Sort reviews'") as HTMLButtonElement | null
@@ -102,6 +113,8 @@ export async function run (event: ScheduledEvent, context: Context) {
 
       mostRelevantOption.click();
 
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
       const reviewsWrapper = sortButton.parentElement?.parentElement?.parentElement
       if (!reviewsWrapper) {
         throw new Error("Reviews wrapper not found");
@@ -114,13 +127,12 @@ export async function run (event: ScheduledEvent, context: Context) {
 
         reviewsWrapper.scrollTo(0, reviewsWrapper.scrollHeight);
 
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        await new Promise(resolve => setTimeout(resolve, 2000));
 
         const newLastReview = reviewsWrapper.children[8].children[reviewsWrapper.children[8].children.length - 1];
 
         hasChanged = currentLastReview !== newLastReview;
       }
-
     })
 
     resolveMain();
@@ -139,7 +151,7 @@ export async function run (event: ScheduledEvent, context: Context) {
     InvocationType: 'Event',
     Payload: JSON.stringify({ 
       data: reviewsData,
-      placeId: "62393fcd-5407-4fd5-816a-8be6619c63c1"
+      placeId
     }),
   }).promise();
 };

@@ -55,8 +55,8 @@ jobs:
 
     - name: Load ".env" file to prisma connection
       run: |
-        touch .env
-        echo DATABASE_URL=""${{ secrets.DATABASE_URL }}"" >> .env
+        touch "./.env"
+        echo DATABASE_URL=""${{ secrets.DATABASE_URL }}"" >> "./.env"
       working-directory: ./places/
 
     - name: Install code dependencies

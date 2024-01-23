@@ -23,9 +23,16 @@ export async function run () {
       InvocationType: 'RequestResponse',
     });
 
+    console.log("payload to string", Payload?.toString())
+    console.log("payload", Payload)
+
     const json = JSON.parse(Payload?.toString() || "{}") as { body: string };
 
+    console.log("JSOn", json)
+
     const places = JSON.parse(json.body ?? "[]");
+
+    console.log("places", places)
 
     await Promise.all(places.map(async (place: any) => {
       await lambdaScraper.invoke({

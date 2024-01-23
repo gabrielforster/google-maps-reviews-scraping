@@ -1,4 +1,4 @@
-import { Lambda } from 'aws-sdk';
+import { Lambda } from "@aws-sdk/client-lambda";
 import puppeteer, { HTTPRequest } from 'puppeteer';
 
 const REVIEWS_URL = "https://www.google.com/maps/rpc/listugcposts";
@@ -151,7 +151,7 @@ export async function handler (input: Input) {
           process.env.IS_OFFLINE
             ? { region: 'localhost', endpoint: `http://localhost:${process.env.scraperPort}` }
             : {}
-        )
+        ),
       })
 
       await lambda.invoke({
@@ -161,7 +161,7 @@ export async function handler (input: Input) {
           data: reviewsData,
           placeId
         }),
-      }).promise();
+      });
   } catch (error) {
     console.info("failed", {
       placeId,

@@ -1,4 +1,4 @@
-import { Lambda } from "aws-sdk";
+import { Lambda } from "@aws-sdk/client-lambda";
 import { Review } from "../../shared/types";
 import { fetch } from "../lib/fetch";
 import { parseGoogleResponse } from "../lib/parser";
@@ -39,13 +39,13 @@ export async function handler (event: Event) {
       process.env.IS_OFFLINE
         ? { region: 'localhost', endpoint: `http://localhost:${process.env.placesPort}` }
         : {}
-    )
+    ),
   })
 
   await lambda.invoke({ 
     FunctionName: 'places-api-reviewPatch',
     InvocationType: 'Event',
     Payload: JSON.stringify(reviews),
-  }).promise();
+  });
 }
 

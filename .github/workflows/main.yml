@@ -1,0 +1,108 @@
+name: Deploy main branch
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      # Expose matched filters as job 'packages' output variable
+      # this outputs is used from needs context
+      # https://github.blog/changelog/2020-04-15-github-actions-new-workflow-features/
+      frontend: ${{ steps.frontend.outputs.frontend }}
+      packages: ${{ steps.backend.outputs.changes }}
+      branch: ${{ steps.extract_branch.outputs.branch }}
+    steps:
+      - name: Commit Checkout
+        uses: actions/checkout@v2
+
+      - name: Extract branch name
+        id: extract_branch
+        run: echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})"
+
+      - uses: dorny/paths-filter@v2
+        id: backend
+        with:
+          filters: |
+            scraper: scraper/**
+            places: places/**
+          base: ${{ steps.extract_branch.outputs.branch }}
+
+      - uses: dorny/paths-filter@v2
+        id: frontend
+        with:
+          filters: |
+            www:
+              - 'frontend/**'
+          base: ${{ steps.extract_branch.outputs.branch }}
+
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: load .env file to prisma connection
+      run: |
+        touch .env
+        echo DATABASE_URL=""${{ secrets.DATABASE_URL }}"" >> .env
+      working-directory: ${{ format('{0}/{1}', '.', env.path) }}
+
+    - name: Install code dependencies
+      run: npm ci
+
+    - name: serverless deploy
+      uses: serverless/github-action@v3.2
+      with:
+        args: deploy
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  deployServices:
+    if: needs.changes.outputs.packages != '[]' && needs.changes.outputs.packages != '' }}
+    needs: [changes]
+    strategy:
+      matrix:
+        service: ${{ fromJSON(needs.changes.outputs.packages) }}
+        fail-fast: false
+        name: Deploy ${{ matrix.service }} Service
+        runs-on: ubuntu-latest
+        env:
+          path: '${{ matrix.service }}'
+          node-version: [20.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Load ".env" file to prisma connection
+      run: |
+        touch .env
+        echo DATABASE_URL=""${{ secrets.DATABASE_URL }}"" >> .env
+      working-directory: ${{ format('{0}/{1}', '.', env.path) }}
+
+    - name: Install code dependencies
+      run: npm ci
+
+    - name: serverless deploy
+      uses: serverless/github-action@v3.2
+      with:
+        args: deploy
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+

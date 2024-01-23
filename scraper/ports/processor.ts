@@ -3,26 +3,33 @@ import puppeteer, { HTTPRequest } from 'puppeteer';
 
 const REVIEWS_URL = "https://www.google.com/maps/rpc/listugcposts";
 
-type Input = {
+  type Input = {
   url: string
   placeId: string
 }
 
 export async function handler (input: Input) {
-  try {
-    const { url, placeId } = input;
+  const { url, placeId } = input;
 
+  try {
     const browser = await puppeteer.launch({
       headless: "new",
       args: ['--lang=en-US,en'],
-    }) 
+      env: { LANGUAGE: "en_US" }
+    })
 
       const page = await browser.newPage();
+
       await page.evaluateOnNewDocument(() => {
-        Object.defineProperty(navigator, 'languages', {
-          get: function () {
-            return ['en-US', 'en', 'bn'];
-          },
+        Object.defineProperty(navigator, "language", {
+          get: function() {
+            return "en-US";
+          }
+        });
+        Object.defineProperty(navigator, "languages", {
+          get: function() {
+            return ["en-US", "en"];
+          }
         });
       });
 
@@ -147,16 +154,20 @@ export async function handler (input: Input) {
         )
       })
 
-      await lambda.invoke({ 
+      await lambda.invoke({
         FunctionName: 'scraper-api-mapper',
         InvocationType: 'Event',
-        Payload: JSON.stringify({ 
+        Payload: JSON.stringify({
           data: reviewsData,
           placeId
         }),
       }).promise();
   } catch (error) {
-    console.error(error); 
+    console.info("failed", {
+      placeId,
+      url
+    });
+    console.error(error);
   }
 };
 

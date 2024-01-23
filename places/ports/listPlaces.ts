@@ -19,6 +19,7 @@ export async function handler (event: APIGatewayProxyEvent): Promise<ProxyResult
       body: places,
     })
   } catch (error) {
+    console.error(error);
     if (error instanceof Error)
       return lambdaError(500, error.message);
 

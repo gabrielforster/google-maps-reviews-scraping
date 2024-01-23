@@ -30,6 +30,7 @@ export async function handler (event: APIGatewayProxyEvent): Promise<ProxyResult
       body: place,
     })
   } catch (error) {
+    console.error(error);
     if (error instanceof Error) {
       if (error.message === "not found") {
         return lambdaError(404, "Not Found");

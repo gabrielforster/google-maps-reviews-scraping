@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       frontend: ${{ steps.frontend.outputs.front }}
-      services: ${{ steps.services.outputs.changes }}
+      places: ${{ steps.places.outputs.places }}
+      scraper: ${{ steps.scraper.outputs.scraper }}
       branch: ${{ steps.extract_branch.outputs.branch }}
     steps:
       - name: Commit Checkout
@@ -21,11 +22,19 @@ jobs:
         run: echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})"
 
       - uses: dorny/paths-filter@v2
-        id: services
+        id: places
         with:
           filters: |
-            scraper: scraper/**
-            places: places/**
+            places:
+              - 'places/**'
+          base: ${{ steps.extract_branch.outputs.branch }}
+
+      - uses: dorny/paths-filter@v2
+        id: scraper
+        with:
+          filters: |
+            scraper:
+              - 'scraper/**'
           base: ${{ steps.extract_branch.outputs.branch }}
 
       - uses: dorny/paths-filter@v2
@@ -37,7 +46,7 @@ jobs:
           base: ${{ steps.extract_branch.outputs.branch }}
 
   places:
-    if: includes(needs.changes.outputs.services, 'places')
+    if: ${{ needs.changes.outputs.places == 'true' }}
     name: Deploy places service
     needs: changes
     runs-on: ubuntu-latest
@@ -70,7 +79,7 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
   scraper:
-    if: includes(needs.changes.outputs.services, 'scraper')
+    if: ${{ needs.changes.outputs.scraper == 'true' }}
     name: Deploy scraper service
     needs: changes
     runs-on: ubuntu-latest

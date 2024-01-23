@@ -54,9 +54,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
 
     - name: Load ".env" file to prisma connection
-      run: |
-        touch "./.env"
-        echo DATABASE_URL=""${{ secrets.DATABASE_URL }}"" >> "./.env"
+      run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > .env
       working-directory: ./places/
 
     - name: Install code dependencies

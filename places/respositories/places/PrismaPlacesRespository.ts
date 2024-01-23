@@ -19,7 +19,7 @@ export class PrismaPlacesRespository implements PlacesRepository {
 
     const avarageRating =
       (place?.reviews?.reduce((acc, review) => acc + review.rating, 0) ?? 0)
-      / (place?.reviews?.length ?? 1);
+      / (place?.reviews?.length || 1);
 
     if (place === null)
       return null;

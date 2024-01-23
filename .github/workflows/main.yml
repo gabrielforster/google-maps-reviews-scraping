@@ -41,8 +41,11 @@ jobs:
     needs: changes
     runs-on: ubuntu-latest
     steps:
-    - name: Changes
-      run: echo "${{ needs.changes.outputs }}"
+    - name: Changes backend
+      run: echo "${{ needs.changes.outputs.backend }}"
+
+    - name: Changes frontend
+      run: echo "${{ needs.changes.outputs.frontend }}"
 
   places:
     if: ${{ needs.changes.outputs.backend.places == 'true' }}

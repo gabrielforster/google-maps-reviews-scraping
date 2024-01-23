@@ -19,7 +19,7 @@ functions:
 
   getPlace:
     handler: ports/getPlace.handler
-    memorySize: 128
+    memorySize: 256
     events:
       - http:
           method: GET

@@ -52,7 +52,6 @@ functions:
 custom:
   serverless-offline: ${file(../offlineConfig.yml):services.scraper}
 
-
 plugins:
   - serverless-esbuild
   - serverless-offline

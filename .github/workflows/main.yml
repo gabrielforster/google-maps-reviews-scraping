@@ -42,11 +42,7 @@ jobs:
   deployPlaces:
     name: Deploy places service
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./places
-      uses:
-        working-directory: ./places
+    working-directory: ./places
     strategy:
       matrix:
         node-version: [20.x]
@@ -78,11 +74,7 @@ jobs:
   deployScraper:
     name: Deploy scraper service
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./scraper
-      uses:
-        working-directory: ./scraper
+    working-directory: ./scraper
     strategy:
       matrix:
         node-version: [20.x]

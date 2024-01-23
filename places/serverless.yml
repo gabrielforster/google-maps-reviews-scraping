@@ -39,8 +39,13 @@ functions:
 
 custom:
   serverless-offline: ${file(../offlineConfig.yml):services.places}
+  esbuild:
+    packagerOptions:
+      scripts:
+        - prisma generate
 
 plugins:
   - serverless-esbuild
   - serverless-offline
+  - serverless-dotenv-plugin
 

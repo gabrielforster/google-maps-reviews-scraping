@@ -17,7 +17,7 @@ onMounted(() => {
 
 async function registerPlace() {
   try {
-    const response = await fetch('/places', {
+    const response = await fetch('https://lmtebcx7dj.execute-api.sa-east-1.amazonaws.com/api' + '/places', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -55,7 +55,7 @@ async function registerPlace() {
 async function fetchData() {
   isLoading.value = true
 
-  const response = await fetch('/places')
+  const response = await fetch('https://lmtebcx7dj.execute-api.sa-east-1.amazonaws.com/api' + '/places')
 
   const placesData = await response.json()
 

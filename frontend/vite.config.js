@@ -12,10 +12,5 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
-  },
-  server: {
-    proxy: {
-      '/places': 'https://lmtebcx7dj.execute-api.sa-east-1.amazonaws.com/api'
-    }
   }
 })

@@ -15,7 +15,7 @@ onMounted(() => {
 async function fetchData() {
   isLoading.value = true
 
-  const response = await fetch('/places/' + place.value)
+  const response = await fetch('https://lmtebcx7dj.execute-api.sa-east-1.amazonaws.com/api' + '/places/' + place.value)
   const placeData = await response.json()
 
   data.value = placeData

@@ -31,8 +31,8 @@ functions:
     handler: ports/schedule.run
     memorySize: 128
     events:
-      # - schedule: rate(5 minutes)
-      - schedule: rate(1 hour)
+      - schedule: rate(5 minutes)
+        # - schedule: rate(1 hour)
       - http:
           method: GET
           path: /run

@@ -6,14 +6,16 @@ import { ListPlaces } from "../use_cases/ListPlaces";
 
 export async function handler (event: APIGatewayProxyEvent): Promise<ProxyResult> {
   try {
+    const params = getParams(event);
+
     const prisma = new PrismaClient();
     const placesRepository = new PrismaPlacesRespository(prisma);
 
-    const places = await new ListPlaces(placesRepository).execute();
+    const places = await new ListPlaces(params, placesRepository).execute();
 
     await prisma.$disconnect();
 
-    return lambdaResponse(201, {
+    return lambdaResponse(200, {
       body: places,
     })
   } catch (error) {
@@ -21,5 +23,15 @@ export async function handler (event: APIGatewayProxyEvent): Promise<ProxyResult
       return lambdaError(500, error.message);
 
     return lambdaError(500, 'Internal Server Error');
+  }
+}
+
+function getParams(event: APIGatewayProxyEvent) {
+  console.log(event.queryStringParameters);
+  const returnReviews = event.queryStringParameters?.reviews === 'true';
+  console.log(returnReviews);
+
+  return {
+    reviews: returnReviews
   }
 }

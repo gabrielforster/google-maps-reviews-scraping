@@ -8,10 +8,14 @@ export type GetPlaceInput = {
   slug: string;
 };
 
+export type ListPlacesInput = {
+  returnReviews: boolean;
+};
+
 export interface PlacesRepository {
   get(input: GetPlaceInput): Promise<PlaceWithId | null>;
 
-  list(): Promise<PlaceWithId[] | null>;
+  list(input: ListPlacesInput): Promise<PlaceWithId[] | null>;
 
   add(place: Place): Promise<PlaceWithId>;
 }

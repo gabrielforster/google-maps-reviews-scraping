@@ -1,7 +1,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 
 import { Place, PlaceWithId } from "../../types/place";
-import { GetPlaceInput, PlacesRepository } from "./interface";
+import { GetPlaceInput, ListPlacesInput, PlacesRepository } from "./interface";
 
 export class PrismaPlacesRespository implements PlacesRepository {
   constructor(private readonly prisma: PrismaClient) { }
@@ -27,8 +27,12 @@ export class PrismaPlacesRespository implements PlacesRepository {
     }
   }
 
-  async list () {
-    const places = await this.prisma.place.findMany();
+  async list ({ returnReviews }: ListPlacesInput): Promise<PlaceWithId[] | null> {
+    const places = await this.prisma.place.findMany({
+      include: {
+        reviews: returnReviews
+      }
+    });
 
     return places.map(place => ({
       id: place.id,
@@ -36,7 +40,16 @@ export class PrismaPlacesRespository implements PlacesRepository {
       slug: place.slug,
       description: place.description,
       url: place.url,
-      createdAt: place.createdAt
+      createdAt: place.createdAt,
+      reviews: place.reviews?.map(review => ({
+        id: review.id,
+        placeId: review.placeId,
+        comment: review.comment,
+        rating: review.rating,
+        reviewer: review.reviewerName,
+        link: review.link,
+        dateTimestamp: new Date(review.date).getTime(),
+      }))
     }));
   }
 

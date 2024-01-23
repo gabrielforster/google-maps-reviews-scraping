@@ -26,7 +26,7 @@ export async function handler (event: APIGatewayProxyEvent): Promise<ProxyResult
 
     await prisma.$disconnect();
 
-    return lambdaResponse(201, {
+    return lambdaResponse(200, {
       body: place,
     })
   } catch (error) {

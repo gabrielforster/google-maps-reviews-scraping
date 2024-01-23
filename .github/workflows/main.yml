@@ -69,6 +69,10 @@ jobs:
       run: npm ci
       working-directory: ./places/
 
+    - name: Generate Prisma Clinet
+      run: npm run prisma:start
+      working-directory: ./places/
+
     - name: serverless deploy
       uses: serverless/github-action@v3.2
       with:

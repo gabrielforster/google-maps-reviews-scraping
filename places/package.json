@@ -1,7 +1,8 @@
 {
   "version": "0.0.1",
   "scripts": {
-    "dev": "serverless offline"
+    "dev": "serverless offline",
+    "prisma:start": "npx prisma generate"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.131",

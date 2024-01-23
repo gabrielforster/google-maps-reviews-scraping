@@ -3,6 +3,7 @@ frameworkVersion: '3'
 
 provider:
   name: aws
+  region: sa-east-1
   runtime: nodejs20.x
   stage: api
   timeout: 30

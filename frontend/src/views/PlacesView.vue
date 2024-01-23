@@ -41,10 +41,15 @@ async function fetchData() {
 
         <div class="self-start">
           <p class="text-xl font-bold">Nota média: {{ data.avarageRating }}</p>
+          <p class="text-xl">Avaliações: {{ data.reviews.length }}</p>
         </div>
       </div>
 
-      <div v-for="review in data.reviews" class="flex flex-col border rounded py-1 px-2 my-2">
+      <div v-if="!data.reviews.length">
+        <p class="text-xl font-bold mt-5 text-center">Sem avaliações por enquanto!</p>
+      </div>
+
+      <div v-else v-for="review in data.reviews" class="flex flex-col border rounded py-1 px-2 my-2">
         <div class="flex flex-col">
           <div class="flex justify-between font-bold">
             <p class="text-lg font-medium pb-1">

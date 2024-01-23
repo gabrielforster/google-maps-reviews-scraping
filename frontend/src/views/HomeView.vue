@@ -17,6 +17,8 @@ onMounted(() => {
 
 async function registerPlace() {
   try {
+    isLoading.value = true;
+
     const response = await fetch('https://lmtebcx7dj.execute-api.sa-east-1.amazonaws.com/api' + '/places', {
       method: 'POST',
       headers: {
@@ -34,8 +36,6 @@ async function registerPlace() {
     if (placeData.error) {
       throw new Error('backend:' + placeData.error)
     }
-
-    isModalOpen.value = false
   } catch (error) {
     if (error.message.startsWith('backend:')) {
       alert(error.message.replace('backend:', ''))
@@ -47,6 +47,9 @@ async function registerPlace() {
     name.value = ''
     description.value = ''
     googleMapsUrl.value = ''
+
+    isLoading.value = false
+    isModalOpen.value = false
 
     fetchData()
   }

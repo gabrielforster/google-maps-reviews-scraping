@@ -44,9 +44,6 @@ jobs:
     - name: Changes backend
       run: echo "${{ needs.changes.outputs.services }}"
 
-    - name: Changes frontend
-      run: echo "${{ needs.changes.outputs.frontend }}"
-
   places:
     if: ${{ needs.changes.outputs.services.places == 'true' }}
     name: Deploy places service

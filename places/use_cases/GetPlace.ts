@@ -27,11 +27,11 @@ export class GetPlace {
   }
 
   private async get (): Promise<PlaceWithId> {
-    const places = await this.placesRepository.get({ slug: this.slug });
+    const place = await this.placesRepository.get({ slug: this.slug });
 
-    if (places === null)
+    if (place === null)
       throw new Error('not found');
 
-    return places;
+    return place;
   }
 }

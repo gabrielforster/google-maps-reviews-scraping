@@ -6,13 +6,20 @@ import { GetPlaceInput, ListPlacesInput, PlacesRepository } from "./interface";
 export class PrismaPlacesRespository implements PlacesRepository {
   constructor(private readonly prisma: PrismaClient) { }
 
-  async get({ id, slug }: GetPlaceInput): Promise<PlaceWithId | null> {
+  async get({ id, slug }: GetPlaceInput): Promise<PlaceWithId & { avarageRating: string } | null> {
     const place = await this.prisma.place.findUnique({
       where: {
         id: id,
         slug: slug
+      },
+      include: {
+        reviews: true
       }
     })
+
+    const avarageRating =
+      (place?.reviews?.reduce((acc, review) => acc + review.rating, 0) ?? 0)
+      / (place?.reviews?.length ?? 1);
 
     if (place === null)
       return null;
@@ -23,7 +30,17 @@ export class PrismaPlacesRespository implements PlacesRepository {
       slug: place.slug,
       description: place.description,
       url: place.url,
-      createdAt: place.createdAt
+      createdAt: place.createdAt,
+      avarageRating: avarageRating.toFixed(1),
+      reviews: place.reviews?.map(review => ({
+        id: review.id,
+        placeId: review.placeId,
+        comment: review.comment,
+        rating: review.rating,
+        reviewer: review.reviewerName,
+        link: review.link,
+        dateTimestamp: new Date(review.date).getTime(),
+      }))
     }
   }
 

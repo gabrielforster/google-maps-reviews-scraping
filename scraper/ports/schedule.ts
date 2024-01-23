@@ -23,10 +23,9 @@ export async function run () {
       InvocationType: 'RequestResponse',
     });
 
-    console.log("payload to string", Payload?.toString())
-    console.log("payload", Payload)
+    const string = new TextDecoder().decode(Payload);
 
-    const json = JSON.parse(Payload?.toString() || "{}") as { body: string };
+    const json = JSON.parse(string || "{}") as { body: string };
 
     console.log("JSOn", json)
 

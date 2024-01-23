@@ -11,6 +11,7 @@ provider:
 functions:
   listPlaces:
     handler: ports/listPlaces.handler
+    memorySize: 128
     events:
       - http:
           method: GET
@@ -18,6 +19,7 @@ functions:
 
   getPlace:
     handler: ports/getPlace.handler
+    memorySize: 128
     events:
       - http:
           method: GET
@@ -25,12 +27,14 @@ functions:
 
   createPlace:
     handler: ports/createPlace.handler
+    memorySize: 128
     events:
       - http:
           method: POST
           path: /places/
 
   reviewPatch:
+    memorySize: 512
     handler: ports/reviewPatch.handler
 
 custom:

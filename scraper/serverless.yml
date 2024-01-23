@@ -29,6 +29,7 @@ provider:
 functions:
   scheduled:
     handler: ports/schedule.run
+    memorySize: 128
     events:
       # - schedule: rate(5 minutes)
       - schedule: rate(1 hour)
@@ -38,10 +39,12 @@ functions:
 
   processor:
     handler: ports/processor.handler
+    memorySize: 512
     timeout: 300
 
   mapper:
     handler: ports/mapper.handler
+    memorySize: 512
     timeout: 300
 
 

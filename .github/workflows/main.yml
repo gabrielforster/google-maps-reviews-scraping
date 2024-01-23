@@ -37,7 +37,7 @@ jobs:
           base: ${{ steps.extract_branch.outputs.branch }}
 
   places:
-    if: ${{ containsValue(needs.changes.outputs.services, 'places') }}
+    if: includes(needs.changes.outputs.services, 'places')
     name: Deploy places service
     needs: changes
     runs-on: ubuntu-latest
@@ -70,7 +70,7 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
   scraper:
-    if: ${{ containsValue(needs.changes.outputs.services, 'scraper') }}
+    if: includes(needs.changes.outputs.services, 'scraper')
     name: Deploy scraper service
     needs: changes
     runs-on: ubuntu-latest

@@ -36,6 +36,14 @@ jobs:
               - 'frontend/**'
           base: ${{ steps.extract_branch.outputs.branch }}
 
+  echoChanges:
+    name: Echo changes
+    needs: changes
+    runs-on: ubuntu-latest
+    steps:
+    - name: Changes
+      run: echo "${{ needs.changes.outputs }}"
+
   places:
     if: ${{ needs.changes.outputs.backend.places == 'true' }}
     name: Deploy places service

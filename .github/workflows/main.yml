@@ -36,16 +36,8 @@ jobs:
               - 'frontend/**'
           base: ${{ steps.extract_branch.outputs.branch }}
 
-  echoChanges:
-    name: Echo changes
-    needs: changes
-    runs-on: ubuntu-latest
-    steps:
-    - name: Changes backend
-      run: echo "${{ needs.changes.outputs.services }}"
-
   places:
-    if: ${{ needs.changes.outputs.services.places == 'true' }}
+    if: in("places", ${{ needs.changes.outputs.services }})
     name: Deploy places service
     needs: changes
     runs-on: ubuntu-latest
@@ -78,7 +70,7 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
   scraper:
-    if: ${{ needs.changes.outputs.services.scraper == 'true' }}
+    if: in("scraper", ${{ needs.changes.outputs.services }})
     name: Deploy scraper service
     needs: changes
     runs-on: ubuntu-latest

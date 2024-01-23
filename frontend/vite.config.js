@@ -15,7 +15,7 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/places': 'http://localhost:5002/api'
+      '/places': 'https://lmtebcx7dj.execute-api.sa-east-1.amazonaws.com/api'
     }
   }
 })

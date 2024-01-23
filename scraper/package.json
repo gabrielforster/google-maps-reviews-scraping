@@ -1,6 +1,6 @@
 {
   "name": "scraper",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "service for scraping the data",
   "author": "@gabrielforster",
   "license": "MIT",

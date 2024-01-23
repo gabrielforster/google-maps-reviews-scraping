@@ -69,18 +69,14 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-  deployServices:
-    if: needs.changes.outputs.packages != '[]' && needs.changes.outputs.packages != '' }}
-    needs: [changes]
+  deployPlaces:
     strategy:
       matrix:
-        service: ${{ fromJSON(needs.changes.outputs.packages) }}
-        fail-fast: false
-        name: Deploy ${{ matrix.service }} Service
+        name: Deploy places service
         runs-on: ubuntu-latest
+        node-version: [20.x]
         env:
-          path: '${{ matrix.service }}'
-          node-version: [20.x]
+          path: 'places'
 
     steps:
     - uses: actions/checkout@v3
@@ -94,6 +90,33 @@ jobs:
         touch .env
         echo DATABASE_URL=""${{ secrets.DATABASE_URL }}"" >> .env
       working-directory: ${{ format('{0}/{1}', '.', env.path) }}
+
+    - name: Install code dependencies
+      run: npm ci
+
+    - name: serverless deploy
+      uses: serverless/github-action@v3.2
+      with:
+        args: deploy
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  deployScraper:
+    strategy:
+      matrix:
+        name: Deploy scraper service
+        runs-on: ubuntu-latest
+        node-version: [20.x]
+        env:
+          path: 'scraper'
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
 
     - name: Install code dependencies
       run: npm ci

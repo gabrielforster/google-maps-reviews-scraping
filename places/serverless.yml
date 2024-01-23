@@ -9,9 +9,6 @@ provider:
   timeout: 30
 
 functions:
-  addPlaceReviews:
-    handler: ports/addPlaceReviews.handler
-
   listPlaces:
     handler: ports/listPlaces.handler
     events:

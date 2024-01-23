@@ -57,15 +57,15 @@ jobs:
       run: |
         touch .env
         echo DATABASE_URL=""${{ secrets.DATABASE_URL }}"" >> .env
-      working-directory: places/
+      working-directory: ./places/
 
     - name: Install code dependencies
       run: npm ci
-      working-directory: places/
+      working-directory: ./places/
 
     - name: serverless deploy
       uses: serverless/github-action@v3.2
-      working-directory: places/
+      working-directory: ./places/
       with:
         args: deploy
       env:
@@ -88,11 +88,11 @@ jobs:
 
     - name: Install code dependencies
       run: npm ci
-      working-directory: scraper/
+      working-directory: ./scraper/
 
     - name: serverless deploy
       uses: serverless/github-action@v3.2
-      working-directory: scraper/
+      working-directory: ./scraper/
       with:
         args: deploy
       env:

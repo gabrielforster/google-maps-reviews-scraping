@@ -33,7 +33,7 @@ model Review {
   commentHash  String   @map("comment_hash")
 
   placeId String
-  place   Place  @relation(fields: [placeId], references: [id])
+  place   Place  @relation(fields: [placeId], references: [id], onDelete: Cascade)
 
   @@unique([placeId, reviewerName, rating, commentHash])
   @@index([placeId, reviewerName], name: "reviewer_name")

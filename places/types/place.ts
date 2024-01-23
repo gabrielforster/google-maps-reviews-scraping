@@ -6,7 +6,7 @@ export type Place = {
   slug: string;
   url: string;
   createdAt?: Date | null;
-  reviews?: ReviewWithId[] | null;
+  reviews?: Omit<ReviewWithId, 'placeId'>[] | null;
 }
 
 export type PlaceWithId = Place & {

@@ -27,9 +27,7 @@ export async function handler (event: APIGatewayProxyEvent): Promise<ProxyResult
 }
 
 function getParams(event: APIGatewayProxyEvent) {
-  console.log(event.queryStringParameters);
   const returnReviews = event.queryStringParameters?.reviews === 'true';
-  console.log(returnReviews);
 
   return {
     reviews: returnReviews

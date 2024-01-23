@@ -58,7 +58,7 @@ export class CreatePlace {
       return place;
     } catch (error) {
       if (error instanceof Error) {
-        if (error.message !== "Unique constraint validation failed") {
+        if (error.message === "Unique constraint validation failed") {
           console.info('There is a unique constraint violation, a new user cannot be created with this email')
 
           if (this.originalSlug === null) {

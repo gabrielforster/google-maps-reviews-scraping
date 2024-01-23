@@ -34,7 +34,6 @@ export class PrismaPlacesRespository implements PlacesRepository {
       avarageRating: avarageRating.toFixed(1),
       reviews: place.reviews?.map(review => ({
         id: review.id,
-        placeId: review.placeId,
         comment: review.comment,
         rating: review.rating,
         reviewer: review.reviewerName,

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import Dialog from 'primevue/dialog'
 
@@ -11,8 +11,18 @@ const name = ref('')
 const description = ref('')
 const googleMapsUrl = ref('')
 
+const fetchDataInterval = ref(null)
+
 onMounted(() => {
   fetchData()
+
+  fetchDataInterval.value = setInterval(() => {
+    fetchData()
+  }, 1000 * 60)
+})
+
+onUnmounted(() => {
+  clearInterval(fetchDataInterval.value)
 })
 
 async function registerPlace() {

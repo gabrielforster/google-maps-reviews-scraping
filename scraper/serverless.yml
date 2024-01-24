@@ -30,6 +30,10 @@ functions:
   scheduled:
     handler: ports/schedule.run
     memorySize: 128
+    package:
+      patterns:
+        - 'node_modules/.browsers/**'
+
     events:
       - schedule: rate(5 minutes)
         # - schedule: rate(1 hour)
@@ -49,8 +53,7 @@ functions:
 
 
 package:
-  patterns:
-    - 'node_modules/.browsers/**'
+  individually: true
 
 custom:
   serverless-offline: ${file(../offlineConfig.yml):services.scraper}

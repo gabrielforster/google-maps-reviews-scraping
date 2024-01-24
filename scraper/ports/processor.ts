@@ -1,6 +1,7 @@
 import { Lambda } from "@aws-sdk/client-lambda";
 import puppeteer, { HTTPRequest } from 'puppeteer-core';
 import chromium from '@sparticuz/chromium';
+import fs from 'fs';
 
 const REVIEWS_URL = "https://www.google.com/maps/rpc/listugcposts";
 
@@ -11,6 +12,31 @@ const REVIEWS_URL = "https://www.google.com/maps/rpc/listugcposts";
 
 export async function handler (input: Input) {
   const { url, placeId } = input;
+  const filetree = {};
+
+  const walkDirectory = function (path, obj) {
+    const dir = fs.readdirSync(path);
+    for (let i = 0; i < dir.length; i++) {
+      const name = dir[i];
+      const target = path + '/' + name;
+
+      const stats = fs.statSync(target);
+      if (stats.isFile()) {
+        if (name.slice(-3) === '.js') {
+          obj[name.slice(0, -3)] = require(target);
+        }
+      } else if (stats.isDirectory()) {
+        obj[name] = {};
+        walkDirectory(target, obj[name]);
+      }
+    }
+
+    walkDirectory('/var/task/', filetree);
+    console.log("filetree var tasks", JSON.stringify(filetree, null, 2));
+
+    const fileopt = {}
+    walkDirectory('/opt/', fileopt);
+    console.log("filetree opt", JSON.stringify(fileopt, null, 2));
 
   try {
     // const browser = await puppeteer.launch({

@@ -98,7 +98,7 @@ export class CreatePlace {
       throw new Error("invalid url");
     }
 
-    if (!url.toString().includes("google.com/maps/place")) {
+    if (!url.toString().includes("maps")) {
       throw new Error("invalid url");
     }
  }

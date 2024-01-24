@@ -11,13 +11,11 @@ const REVIEWS_URL = "https://www.google.com/maps/rpc/listugcposts";
 export async function handler (input: Input) {
   const { url, placeId } = input;
 
-  console.log("path", puppeteer.executablePath());
-
   try {
     const browser = await puppeteer.launch({
       headless: "new",
       args: ['--lang=en-US,en'],
-      env: { LANGUAGE: "en_US" }
+      env: { LANGUAGE: "en_US" },
     })
 
       const page = await browser.newPage();

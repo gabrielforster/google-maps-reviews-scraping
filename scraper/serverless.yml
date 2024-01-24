@@ -40,10 +40,6 @@ functions:
     handler: ports/processor.handler
     memorySize: 1024
     timeout: 300
-    package:
-      individually: true
-      patterns:
-        - "node_modules/.browsers/**"
 
   mapper:
     handler: ports/mapper.handler
@@ -53,6 +49,8 @@ functions:
 
 package:
   individually: true
+  patterns:
+    - "!node_modules/"
 
 custom:
   serverless-offline: ${file(../offlineConfig.yml):services.scraper}

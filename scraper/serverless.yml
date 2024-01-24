@@ -40,8 +40,10 @@ functions:
     handler: ports/processor.handler
     memorySize: 1024
     timeout: 300
-    layers:
-      - 'arn:aws:lambda:sa-east-1:764866452798:layer:chrome-aws-lambda:41'
+    package:
+      individually: true
+      patterns:
+        - "node_modules/.browsers/**"
 
   mapper:
     handler: ports/mapper.handler
@@ -51,16 +53,12 @@ functions:
 
 package:
   individually: true
-  patterns:
-    - '!node_modules/@sparticuz/chromium'
 
 custom:
   serverless-offline: ${file(../offlineConfig.yml):services.scraper}
   esbuild:
     bundle: true
     minify: false
-    external:
-      - '@sparticuz/chromium'
 
 
 plugins:

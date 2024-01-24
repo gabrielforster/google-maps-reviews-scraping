@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { RouterLink } from 'vue-router'
 import Dialog from 'primevue/dialog'
 
@@ -18,10 +18,11 @@ onMounted(() => {
 
   fetchDataInterval.value = setInterval(() => {
     fetchData()
+    console.log('fetching data...')
   }, 1000 * 60)
 })
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
   clearInterval(fetchDataInterval.value)
 })
 

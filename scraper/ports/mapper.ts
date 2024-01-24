@@ -34,6 +34,16 @@ export async function handler (event: Event) {
 
   const reviews = parseGoogleResponse(fulfilled, placeId);
 
+  console.log({
+    fulfilled: fulfilled.length,
+    rejected: rejected.length,
+  })
+
+  console.log({
+    reviews: reviews.length,
+    placeId,
+  })
+
   const lambda = new Lambda({
     ...(
       process.env.IS_OFFLINE
@@ -42,7 +52,7 @@ export async function handler (event: Event) {
     ),
   })
 
-  await lambda.invoke({ 
+  await lambda.invoke({
     FunctionName: 'places-api-reviewPatch',
     InvocationType: 'Event',
     Payload: JSON.stringify(reviews),

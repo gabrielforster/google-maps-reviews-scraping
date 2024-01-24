@@ -107,7 +107,7 @@ export async function handler (input: Input) {
 
               sortButton.click();
 
-              await new Promise(resolve => setTimeout(resolve, 2000));
+              await new Promise(resolve => setTimeout(resolve, 5000));
 
               const optionsMenu = document.querySelector("div[id='action-menu'")
                 if (!optionsMenu) {
@@ -123,7 +123,7 @@ export async function handler (input: Input) {
 
                 mostRelevantOption.click();
 
-                await new Promise(resolve => setTimeout(resolve, 3000));
+                await new Promise(resolve => setTimeout(resolve, 5000));
 
                 const reviewsWrapper = sortButton.parentElement?.parentElement?.parentElement
                 if (!reviewsWrapper) {

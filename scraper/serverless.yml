@@ -25,11 +25,6 @@ provider:
             - '*'
 
 
-layers:
-  chrome:
-    package:
-      artifact: chrome.zip
-
 functions:
   scheduled:
     handler: ports/schedule.run
@@ -46,7 +41,7 @@ functions:
     memorySize: 512
     timeout: 300
     layers:
-      - { Ref: ChromeLambdaLayer }
+      - 'arn:aws:lambda:sa-east-1:764866452798:layer:chrome-aws-lambda:41'
 
   mapper:
     handler: ports/mapper.handler
@@ -57,7 +52,7 @@ functions:
 package:
   individually: true
   patterns:
-    - 'node_modules/@sparticuz/chromium/bin/'
+    - '!node_modules/@sparticuz/chromium'
 
 custom:
   serverless-offline: ${file(../offlineConfig.yml):services.scraper}

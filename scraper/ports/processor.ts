@@ -123,7 +123,7 @@ export async function handler (input: Input) {
 
                 mostRelevantOption.click();
 
-                await new Promise(resolve => setTimeout(resolve, 5000));
+                await new Promise(resolve => setTimeout(resolve, 10000));
 
                 const reviewsWrapper = sortButton.parentElement?.parentElement?.parentElement
                 if (!reviewsWrapper) {

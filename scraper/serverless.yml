@@ -27,10 +27,13 @@ provider:
 
 # layers:
 #   BrowserPuppeteer:
+#     name: chrome-layer
 #     description: Puppeteer Browsers Layer
-#     path: 'node_modules/.browsers/'
-
-
+#     compatibleRuntimes:
+#       - nodejs20.x
+#     path: 'node_modules/.browsers/puppeteer/chrome/linux-119.0.6045.105/chrome-linux64/'
+#
+#
 
 functions:
   scheduled:
@@ -47,28 +50,25 @@ functions:
     handler: ports/processor.handler
     memorySize: 512
     timeout: 300
-    # layers:
-    #   - { Ref: BrowserPuppeteerLambdaLayer }
-    package:
-      patterns:
-        - '!node_modules/**'
-        - '!node_modules/**/**'
-        - '!node_modules/.browser/**'
-        - 'node_modules/.browsers/puppeteer/chrome/linux-119.0.6045.105/chrome-linux64/chrome'
+      # layers:
+      # - { Ref: BrowserPuppeteerLambdaLayer }
 
   mapper:
     handler: ports/mapper.handler
     memorySize: 512
     timeout: 300
 
+
 package:
   individually: true
+  # patterns:
+  #   - 'node_modules/.browsers/puppeteer/chrome/linux-119.0.6045.105/chrome-linux64/chrome'
 
 custom:
   serverless-offline: ${file(../offlineConfig.yml):services.scraper}
-  # esbuild:
-  #   bundle: true
-  #   minify: true
+  esbuild:
+    bundle: true
+    minify: false
 
 
 

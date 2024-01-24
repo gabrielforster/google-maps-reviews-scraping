@@ -1,5 +1,6 @@
 import { Lambda } from "@aws-sdk/client-lambda";
-import puppeteer, { HTTPRequest } from 'puppeteer';
+import puppeteer, { HTTPRequest } from 'puppeteer-core';
+import chromium from "@sparticuz/chromium";
 
 const REVIEWS_URL = "https://www.google.com/maps/rpc/listugcposts";
 
@@ -15,10 +16,16 @@ export async function handler (input: Input) {
 
   try {
     const browser = await puppeteer.launch({
-      headless: "new",
-      args: ['--lang=en-US,en'],
-        env: { LANGUAGE: "en_US" }
-    })
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath(
+        process.env.AWS_EXECUTION_ENV
+        ? '/opt/nodejs/node_modules/@sparticuz/chromium/bin'
+        : undefined,
+      ),
+      headless: true,
+      ignoreHTTPSErrors: true,
+    });
 
     const page = await browser.newPage();
 

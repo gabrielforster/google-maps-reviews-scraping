@@ -124,7 +124,7 @@ export async function handler (input: Input) {
 
                 mostRelevantOption.click();
 
-                await new Promise(resolve => setTimeout(resolve, 10000));
+                await new Promise(resolve => setTimeout(resolve, 500));
 
                 // const reviewsWrapper = sortButton.parentElement?.parentElement?.parentElement
                 const reviewsWrapper = document.querySelector("div[role='main']")?.children[1]

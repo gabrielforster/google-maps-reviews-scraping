@@ -8,18 +8,18 @@ const place = ref(route.params.place)
 const data = ref(null)
 const isLoading = ref(false)
 
-const fetchDataInterval = null
+const fetchDataInterval = ref(null)
 
 onMounted(() => {
   fetchData()
 
-  fetchDataInterval = setInterval(() => {
+  fetchDataInterval.value = setInterval(() => {
     fetchData()
   }, 1000 * 60)
 })
 
 onBeforeUnmount(() => {
-  clearInterval(fetchDataInterval)
+  clearInterval(fetchDataInterval.value)
 })
 
 async function fetchData() {

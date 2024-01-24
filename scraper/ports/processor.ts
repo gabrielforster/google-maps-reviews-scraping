@@ -14,10 +14,15 @@ export async function handler (input: Input) {
   const { url, placeId } = input;
 
   try {
-   const browser = await puppeteer.launch({
+
+    const path = process.env.IS_OFFLINE
+      ? undefined
+      : "/opt/nodejs/node_modules/@sparticuz/chromium/bin"
+
+    const browser = await puppeteer.launch({
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath("/opt/nodejs/node_modules/@sparticuz/chromium/bin"),
+      executablePath: await chromium.executablePath(path),
       headless: chromium.headless,
       ignoreHTTPSErrors: true,
       protocolTimeout: 450_000,

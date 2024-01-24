@@ -11,157 +11,157 @@ const REVIEWS_URL = "https://www.google.com/maps/rpc/listugcposts";
 export async function handler (input: Input) {
   const { url, placeId } = input;
 
+  console.log("path", puppeteer.executablePath())
+
   try {
     const browser = await puppeteer.launch({
       headless: "new",
       args: ['--lang=en-US,en'],
-      env: { LANGUAGE: "en_US" }
+        env: { LANGUAGE: "en_US" }
     })
 
-      const page = await browser.newPage();
+    const page = await browser.newPage();
 
-      await page.evaluateOnNewDocument(() => {
-        Object.defineProperty(navigator, "language", {
-          get: function() {
-            return "en-US";
-          }
-        });
-        Object.defineProperty(navigator, "languages", {
-          get: function() {
-            return ["en-US", "en"];
-          }
-        });
+    await page.evaluateOnNewDocument(() => {
+      Object.defineProperty(navigator, "language", {
+        get: function() {
+          return "en-US";
+        }
       });
-
-      await page.setExtraHTTPHeaders({
-        'Accept-Language': 'en-US'
+      Object.defineProperty(navigator, "languages", {
+        get: function() {
+          return ["en-US", "en"];
+        }
       });
+    });
 
-      await page.goto(url);
+    await page.setExtraHTTPHeaders({
+      'Accept-Language': 'en-US'
+    });
 
-      await page.waitForSelector("div[role='tablist']");
+    await page.goto(url);
 
-      await page.evaluate(() => {
-        const buttonsWrapper = document.querySelector("div[role='tablist']")
-        if (!buttonsWrapper) {
-          throw new Error("Buttons wrapper not found");
+    await page.waitForSelector("div[role='tablist']");
+
+    await page.evaluate(() => {
+      const buttonsWrapper = document.querySelector("div[role='tablist']")
+      if (!buttonsWrapper) {
+        throw new Error("Buttons wrapper not found");
+      }
+
+      // const button = Array.from(buttonsWrapper.children)
+      //   .find(button => button.innerHTML.includes("Reviews")) as HTMLButtonElement | null
+
+      const button = Array.from(buttonsWrapper.children)[1] as HTMLButtonElement | null
+
+      if (!button) {
+        throw new Error("Reviews button not found");
+      }
+
+      button.click();
+    })
+
+    const reviewsCount = await page.evaluate(() => {
+      const wrapper = Array.from(document.getElementsByClassName("fontBodySmall"))
+
+      return wrapper[0].innerHTML.split(" ")[0];
+
+      // const reviewsText = wrapper.find((element) => element.innerHTML.includes("reviews"))
+      // if (!reviewsText) {
+      //   throw new Error("Reviews text not found");
+      // }
+      //
+      // const [count] = reviewsText.innerHTML.split(" ");
+      // return count;
+
+    });
+
+    const reviewsData: any[] = [];
+
+    await new Promise<void>(async (resolveMain) => {
+      page.setRequestInterception(true);
+
+
+      page.on('request', (request: HTTPRequest) => {
+        if (request.url().startsWith(REVIEWS_URL)) {
+          reviewsData.push({
+            url: request.url(),
+            headers: request.headers(),
+          })
         }
 
-        // const button = Array.from(buttonsWrapper.children)
-        //   .find(button => button.innerHTML.includes("Reviews")) as HTMLButtonElement | null
-
-        const button = Array.from(buttonsWrapper.children)[1] as HTMLButtonElement | null
-
-        if (!button) {
-          throw new Error("Reviews button not found");
-        }
-
-        button.click();
+        request.continue();
       })
 
-      await page.waitForSelector("div[role='tablist']");
+      // await page.waitForSelector("button[aria-label='Sort reviews'");
+      await page.waitForSelector("button[aria-label='Classificar avaliações'");
 
-      const reviewsCount = await page.evaluate(() => {
-        const wrapper = Array.from(document.getElementsByClassName("fontBodySmall"))
+        await page.evaluate(async () => {
+          // const sortButton = document.querySelector("button[aria-label='Sort reviews'") as HTMLButtonElement | null
+          const sortButton = document.querySelector("button[aria-label='Classificar avaliações'") as HTMLButtonElement | null
+            if (!sortButton) {
+              throw new Error("Sort button not found");
+            }
 
-        return wrapper[0].innerHTML.split(" ")[0];
+            sortButton.click();
 
-        // const reviewsText = wrapper.find((element) => element.innerHTML.includes("reviews"))
-        // if (!reviewsText) {
-        //   throw new Error("Reviews text not found");
-        // }
-        //
-        // const [count] = reviewsText.innerHTML.split(" ");
-        // return count;
+            await new Promise(resolve => setTimeout(resolve, 300));
 
-      });
-
-      const reviewsData: any[] = [];
-
-      await new Promise<void>(async (resolveMain) => {
-        page.setRequestInterception(true);
-
-
-        page.on('request', (request: HTTPRequest) => {
-          if (request.url().startsWith(REVIEWS_URL)) {
-            reviewsData.push({
-              url: request.url(),
-              headers: request.headers(),
-            })
-          }
-
-          request.continue();
-        })
-
-        // await page.waitForSelector("button[aria-label='Sort reviews'");
-        await page.waitForSelector("button[aria-label='Classificar avaliações'");
-
-          await page.evaluate(async () => {
-            // const sortButton = document.querySelector("button[aria-label='Sort reviews'") as HTMLButtonElement | null
-            const sortButton = document.querySelector("button[aria-label='Classificar avaliações'") as HTMLButtonElement | null
-              if (!sortButton) {
-                throw new Error("Sort button not found");
+            const optionsMenu = document.querySelector("div[id='action-menu'")
+              if (!optionsMenu) {
+                throw new Error("Options menu not found");
               }
 
-              sortButton.click();
+              const mostRelevantOption = Array.from(optionsMenu.children)
+              // .find(element => element.innerHTML.includes("Most relevant")) as HTMLButtonElement | null
+              .find(element => element.innerHTML.includes("Mais relevantes")) as HTMLButtonElement | null
+              if (!mostRelevantOption) {
+                throw new Error("Most relevant option not found");
+              }
 
-              await new Promise(resolve => setTimeout(resolve, 250));
+              mostRelevantOption.click();
 
-              const optionsMenu = document.querySelector("div[id='action-menu'")
-                if (!optionsMenu) {
-                  throw new Error("Options menu not found");
-                }
+              await new Promise(resolve => setTimeout(resolve, 1000));
 
-                const mostRelevantOption = Array.from(optionsMenu.children)
-                // .find(element => element.innerHTML.includes("Most relevant")) as HTMLButtonElement | null
-                .find(element => element.innerHTML.includes("Mais relevantes")) as HTMLButtonElement | null
-                if (!mostRelevantOption) {
-                  throw new Error("Most relevant option not found");
-                }
+              const reviewsWrapper = sortButton.parentElement?.parentElement?.parentElement
+              if (!reviewsWrapper) {
+                throw new Error("Reviews wrapper not found");
+              }
 
-                mostRelevantOption.click();
+              let hasChanged = true;
 
-                await new Promise(resolve => setTimeout(resolve, 1000));
+              while (hasChanged) {
+                const currentLastReview = reviewsWrapper.children[8].children[reviewsWrapper.children[8].children.length - 1];
 
-                const reviewsWrapper = sortButton.parentElement?.parentElement?.parentElement
-                if (!reviewsWrapper) {
-                  throw new Error("Reviews wrapper not found");
-                }
+                reviewsWrapper.scrollTo(0, reviewsWrapper.scrollHeight);
 
-                let hasChanged = true;
+                await new Promise(resolve => setTimeout(resolve, 2000));
 
-                while (hasChanged) {
-                  const currentLastReview = reviewsWrapper.children[8].children[reviewsWrapper.children[8].children.length - 1];
+                const newLastReview = reviewsWrapper.children[8].children[reviewsWrapper.children[8].children.length - 1];
 
-                  reviewsWrapper.scrollTo(0, reviewsWrapper.scrollHeight);
+                hasChanged = currentLastReview !== newLastReview;
+              }
+        })
 
-                  await new Promise(resolve => setTimeout(resolve, 2000));
+        resolveMain();
+    })
 
-                  const newLastReview = reviewsWrapper.children[8].children[reviewsWrapper.children[8].children.length - 1];
+    const lambda = new Lambda({
+      ...(
+        process.env.IS_OFFLINE
+          ? { region: 'localhost', endpoint: `http://localhost:${process.env.scraperPort}` }
+          : {}
+      ),
+    })
 
-                  hasChanged = currentLastReview !== newLastReview;
-                }
-          })
-
-          resolveMain();
-      })
-
-      const lambda = new Lambda({
-        ...(
-          process.env.IS_OFFLINE
-            ? { region: 'localhost', endpoint: `http://localhost:${process.env.scraperPort}` }
-            : {}
-        ),
-      })
-
-      await lambda.invoke({
-        FunctionName: 'scraper-api-mapper',
-        InvocationType: 'Event',
-        Payload: JSON.stringify({
-          data: reviewsData,
-          placeId
-        }),
-      });
+    await lambda.invoke({
+      FunctionName: 'scraper-api-mapper',
+      InvocationType: 'Event',
+      Payload: JSON.stringify({
+        data: reviewsData,
+        placeId
+      }),
+    });
   } catch (error) {
     console.info("failed", {
       placeId,

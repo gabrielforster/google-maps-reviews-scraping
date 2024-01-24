@@ -27,11 +27,7 @@ export async function run () {
 
     const json = JSON.parse(string || "{}") as { body: string };
 
-    console.log("JSOn", json)
-
     const places = JSON.parse(json.body ?? "[]");
-
-    console.log("places", places)
 
     await Promise.all(places.map(async (place: any) => {
       await lambdaScraper.invoke({

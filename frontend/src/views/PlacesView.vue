@@ -1,5 +1,5 @@
 <script setup>
-import { defineComponent, ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
@@ -8,8 +8,18 @@ const place = ref(route.params.place)
 const data = ref(null)
 const isLoading = ref(false)
 
+const fetchDataInterval = null
+
 onMounted(() => {
   fetchData()
+
+  fetchDataInterval = setInterval(() => {
+    fetchData()
+  }, 1000 * 60)
+})
+
+onBeforeUnmount(() => {
+  clearInterval(fetchDataInterval)
 })
 
 async function fetchData() {

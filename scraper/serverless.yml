@@ -43,6 +43,7 @@ functions:
     timeout: 300
     package:
       patterns:
+        - '!node_modules/**'
         - 'node_modules/.browsers/**'
 
   mapper:

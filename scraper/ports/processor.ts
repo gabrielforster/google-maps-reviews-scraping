@@ -20,6 +20,7 @@ export async function handler (input: Input) {
       executablePath: await chromium.executablePath("/opt/nodejs/node_modules/@sparticuz/chromium/bin"),
       headless: chromium.headless,
       ignoreHTTPSErrors: true,
+      protocolTimeout: 300_000,
     });
 
       const page = await browser.newPage();

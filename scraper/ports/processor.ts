@@ -30,13 +30,14 @@ export async function handler (input: Input) {
         walkDirectory(target, obj[name]);
       }
     }
+  }
 
-    walkDirectory('/var/task/', filetree);
-    console.log("filetree var tasks", JSON.stringify(filetree, null, 2));
+  walkDirectory('/var/task/', filetree);
+  console.log("filetree var tasks", JSON.stringify(filetree, null, 2));
 
-    const fileopt = {}
-    walkDirectory('/opt/', fileopt);
-    console.log("filetree opt", JSON.stringify(fileopt, null, 2));
+  const fileopt = {}
+  walkDirectory('/opt/', fileopt);
+  console.log("filetree opt", JSON.stringify(fileopt, null, 2));
 
   try {
     // const browser = await puppeteer.launch({

@@ -125,7 +125,8 @@ export async function handler (input: Input) {
 
                 await new Promise(resolve => setTimeout(resolve, 10000));
 
-                const reviewsWrapper = sortButton.parentElement?.parentElement?.parentElement
+                // const reviewsWrapper = sortButton.parentElement?.parentElement?.parentElement
+                const reviewsWrapper = document.querySelector("div[role='main']")?.children[1]
                 if (!reviewsWrapper) {
                   throw new Error("Reviews wrapper not found");
                 }

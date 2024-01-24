@@ -50,9 +50,10 @@ functions:
     # layers:
     #   - { Ref: BrowserPuppeteerLambdaLayer }
     package:
-      individually: true
       patterns:
         - '!node_modules/**'
+        - '!node_modules/**/**'
+        - '!node_modules/.browser/**'
         - 'node_modules/.browsers/puppeteer/chrome/linux-119.0.6045.105/chrome-linux64/chrome'
 
   mapper:
@@ -60,10 +61,16 @@ functions:
     memorySize: 512
     timeout: 300
 
-
+package:
+  individually: true
 
 custom:
   serverless-offline: ${file(../offlineConfig.yml):services.scraper}
+  # esbuild:
+  #   bundle: true
+  #   minify: true
+
+
 
 plugins:
   - serverless-esbuild

@@ -17,8 +17,8 @@ onMounted(() => {
   fetchData()
 
   fetchDataInterval.value = setInterval(() => {
-    fetchData()
     console.log('fetching data...')
+    fetchData()
   }, 1000 * 60)
 })
 

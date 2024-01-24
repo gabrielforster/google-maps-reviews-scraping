@@ -139,7 +139,7 @@ export async function handler (input: Input) {
 
                   reviewsWrapper.scrollTo(0, reviewsWrapper.scrollHeight);
 
-                  await new Promise(resolve => setTimeout(resolve, 7500));
+                  await new Promise(resolve => setTimeout(resolve, 6000));
 
                   const newLastReview = reviewsWrapper.children[8].children[reviewsWrapper.children[8].children.length - 1];
 

@@ -59,7 +59,8 @@ custom:
   esbuild:
     bundle: true
     minify: false
-
+    external:
+      - '@sparticuz/chromium'
 
 
 plugins:

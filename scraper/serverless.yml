@@ -38,7 +38,7 @@ functions:
 
   processor:
     handler: ports/processor.handler
-    memorySize: 512
+    memorySize: 1024
     timeout: 300
     layers:
       - 'arn:aws:lambda:sa-east-1:764866452798:layer:chrome-aws-lambda:41'

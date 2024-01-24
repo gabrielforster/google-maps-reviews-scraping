@@ -49,8 +49,6 @@ functions:
 
 package:
   individually: true
-  patterns:
-    - "!node_modules/"
 
 custom:
   serverless-offline: ${file(../offlineConfig.yml):services.scraper}

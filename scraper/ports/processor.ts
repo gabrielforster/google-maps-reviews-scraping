@@ -107,7 +107,7 @@ export async function handler (input: Input) {
 
               sortButton.click();
 
-              await new Promise(resolve => setTimeout(resolve, 500));
+              await new Promise(resolve => setTimeout(resolve, 1000));
 
               const optionsMenu = document.querySelector("div[id='action-menu'")
                 if (!optionsMenu) {

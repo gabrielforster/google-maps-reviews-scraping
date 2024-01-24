@@ -25,10 +25,10 @@ provider:
             - '*'
 
 
-layers:
-  BrowserPuppeteer:
-    description: Puppeteer Browsers Layer
-    path: 'node_modules/.browsers/'
+# layers:
+#   BrowserPuppeteer:
+#     description: Puppeteer Browsers Layer
+#     path: 'node_modules/.browsers/'
 
 
 
@@ -47,14 +47,13 @@ functions:
     handler: ports/processor.handler
     memorySize: 512
     timeout: 300
-    layers:
-      - { Ref: BrowserPuppeteerLambdaLayer }
-
-    # package:
-    #   individually: true
-    #   patterns:
-    #     - '!node_modules/**'
-    #     - 'node_modules/.browsers/**'
+    # layers:
+    #   - { Ref: BrowserPuppeteerLambdaLayer }
+    package:
+      individually: true
+      patterns:
+        - '!node_modules/**'
+        - 'node_modules/.browsers/puppeteer/chrome/linux-119.0.6045.105/chrome-linux64/chrome'
 
   mapper:
     handler: ports/mapper.handler

@@ -61,8 +61,8 @@ functions:
 
 package:
   individually: true
-  # patterns:
-  #   - 'node_modules/.browsers/puppeteer/chrome/linux-119.0.6045.105/chrome-linux64/chrome'
+  patterns:
+    - 'node_modules/@sparticuz/chromium/bin/'
 
 custom:
   serverless-offline: ${file(../offlineConfig.yml):services.scraper}

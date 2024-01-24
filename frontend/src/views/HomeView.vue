@@ -11,19 +11,19 @@ const name = ref('')
 const description = ref('')
 const googleMapsUrl = ref('')
 
-const fetchDataInterval = ref(null)
+const fetchDataInterval = null
 
 onMounted(() => {
   fetchData()
 
-  fetchDataInterval.value = setInterval(() => {
+  fetchDataInterval = setInterval(() => {
     console.log('fetching data...')
     fetchData()
   }, 1000 * 60)
 })
 
 onBeforeUnmount(() => {
-  clearInterval(fetchDataInterval.value)
+  clearInterval(fetchDataInterval)
 })
 
 async function registerPlace() {

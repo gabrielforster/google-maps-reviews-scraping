@@ -14,7 +14,7 @@ export async function handler (input: Input) {
 
   const chromePath = await chromium.executablePath(
     process.env.AWS_EXECUTION_ENV
-      ? '../node_modules/@sparticuz/chromium/bin'
+      ? '/var/task/node_modules/@sparticuz/chromium/bin'
       : undefined,
   )
 

@@ -12,17 +12,20 @@ const REVIEWS_URL = "https://www.google.com/maps/rpc/listugcposts";
 export async function handler (input: Input) {
   const { url, placeId } = input;
 
-  console.log("path", puppeteer.executablePath())
+  const chromePath = await chromium.executablePath(
+    process.env.AWS_EXECUTION_ENV
+      ? '/opt/nodejs/node_modules/@sparticuz/chromium/bin'
+      : undefined,
+  )
+
+  console.log("path", chromePath)
+  console.log("env", process.env.AWS_EXECUTION_ENV)
 
   try {
     const browser = await puppeteer.launch({
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath(
-        process.env.AWS_EXECUTION_ENV
-        ? '/opt/nodejs/node_modules/@sparticuz/chromium/bin'
-        : undefined,
-      ),
+      executablePath: chromePath,
       headless: true,
       ignoreHTTPSErrors: true,
     });

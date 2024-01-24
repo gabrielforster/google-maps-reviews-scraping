@@ -12,39 +12,8 @@ const REVIEWS_URL = "https://www.google.com/maps/rpc/listugcposts";
 
 export async function handler (input: Input) {
   const { url, placeId } = input;
-  const filetree = {};
-
-  const walkDirectory = function (path, obj) {
-    const dir = fs.readdirSync(path);
-    for (let i = 0; i < dir.length; i++) {
-      const name = dir[i];
-      const target = path + '/' + name;
-
-      const stats = fs.statSync(target);
-      if (stats.isFile()) {
-        if (name.slice(-3) === '.js') {
-          obj[name.slice(0, -3)] = require(target);
-        }
-      } else if (stats.isDirectory()) {
-        obj[name] = {};
-        walkDirectory(target, obj[name]);
-      }
-    }
-  }
-
-  walkDirectory('/var/task/', filetree);
-  console.log("filetree var tasks", JSON.stringify(filetree, null, 2));
-
-  const fileopt = {}
-  walkDirectory('/opt/', fileopt);
-  console.log("filetree opt", JSON.stringify(fileopt, null, 2));
 
   try {
-    // const browser = await puppeteer.launch({
-    //   headless: "new",
-    //   args: ['--lang=en-US,en'],
-    //   env: { LANGUAGE: "en_US" },
-    // })
    const browser = await puppeteer.launch({
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
@@ -138,7 +107,7 @@ export async function handler (input: Input) {
 
               sortButton.click();
 
-              await new Promise(resolve => setTimeout(resolve, 300));
+              await new Promise(resolve => setTimeout(resolve, 500));
 
               const optionsMenu = document.querySelector("div[id='action-menu'")
                 if (!optionsMenu) {

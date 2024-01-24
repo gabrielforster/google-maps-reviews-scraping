@@ -1,7 +1,14 @@
 import { Lambda } from "@aws-sdk/client-lambda";
-import { Review } from "../../shared/types";
 import { fetch } from "../lib/fetch";
 import { parseGoogleResponse } from "../lib/parser";
+
+const lambda = new Lambda({
+  ...(
+    process.env.IS_OFFLINE
+      ? { region: 'localhost', endpoint: `http://localhost:${process.env.placesPort}` }
+      : {}
+  ),
+})
 
 type Event = {
   placeId: string;
@@ -32,25 +39,12 @@ export async function handler (event: Event) {
     return acc;
   } , [[], []] as [Data, Array<Error>]);
 
+  if (rejected.length) {
+    console.info("Rejecteds")
+    rejected.forEach((error) => console.error(error));
+  }
+
   const reviews = parseGoogleResponse(fulfilled, placeId);
-
-  console.log({
-    fulfilled: fulfilled.length,
-    rejected: rejected.length,
-  })
-
-  console.log({
-    reviews: reviews.length,
-    placeId,
-  })
-
-  const lambda = new Lambda({
-    ...(
-      process.env.IS_OFFLINE
-        ? { region: 'localhost', endpoint: `http://localhost:${process.env.placesPort}` }
-        : {}
-    ),
-  })
 
   await lambda.invoke({
     FunctionName: 'places-api-reviewPatch',

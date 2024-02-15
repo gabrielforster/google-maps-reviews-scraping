@@ -3,7 +3,7 @@ name: Deploy main branch
 on:
   push:
     branches:
-      - main
+      - aeou # - main
 
 jobs:
   changes:
